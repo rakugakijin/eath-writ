@@ -1,4 +1,6 @@
-<img src="docs/images/icon.png" width="120" alt="EathWrit app icon">
+<p align="center">
+  <img src="docs/images/icon.png" width="200" alt="EathWrit app icon">
+</p>
 
 # EathWrit — A single-buffer iPhone scratchpad for text you write, copy, and throw away
 

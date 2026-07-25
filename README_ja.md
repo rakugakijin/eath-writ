@@ -1,4 +1,6 @@
-<img src="docs/images/icon.png" width="120" alt="EathWrit のアプリアイコン">
+<p align="center">
+  <img src="docs/images/icon.png" width="200" alt="EathWrit のアプリアイコン">
+</p>
 
 # EathWrit — 書いて、コピーして、捨てるための iPhone 用スクラッチパッド
 
