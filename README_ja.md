@@ -39,8 +39,8 @@ EathWrit の答えは、「書く場所そのものをそのフィールドの�
 ## クイックスタート
 
 ```bash
-git clone https://github.com/hnsol/EathWrit.git
-open EathWrit/EathWrit.xcodeproj
+git clone https://github.com/hnsol/eath-writ.git
+open eath-writ/EathWrit.xcodeproj
 ```
 
 Xcode を開いたら、**Signing & Capabilities** で自分の開発チームを選び、実行先に自分の iPhone を指定して ⌘R を押してください。アプリはキーボードが上がった状態のエディタに直接起動します。起動画面もオンボーディングもアカウント登録もありません。

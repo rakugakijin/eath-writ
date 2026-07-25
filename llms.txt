@@ -107,6 +107,7 @@ The alternative most people default to is simply typing into the destination app
 
 ## Links
 
+- Source: https://github.com/hnsol/eath-writ
 - License: MIT (see `LICENSE`)
 - Package registry: none — distributed as an Xcode project, not on the App Store or any package manager
 - Bundle identifier: `com.masatora.eathwrit`

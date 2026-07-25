@@ -39,8 +39,8 @@ The trade is one extra paste. What you get back is a predictable editing surface
 ## Quick Start
 
 ```bash
-git clone https://github.com/hnsol/EathWrit.git
-open EathWrit/EathWrit.xcodeproj
+git clone https://github.com/hnsol/eath-writ.git
+open eath-writ/EathWrit.xcodeproj
 ```
 
 Then in Xcode: select your development team under **Signing & Capabilities**, pick your iPhone as the run destination, and press ⌘R. The app launches straight into the editor with the keyboard already up — there is no launch screen to tap through, no onboarding, and no account.
