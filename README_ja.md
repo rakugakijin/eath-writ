@@ -39,7 +39,7 @@ EathWrit の答えは、「書く場所そのものをそのフィールドの�
 ## クイックスタート
 
 ```bash
-git clone <your-fork-url> EathWrit
+git clone https://github.com/hnsol/EathWrit.git
 open EathWrit/EathWrit.xcodeproj
 ```
 

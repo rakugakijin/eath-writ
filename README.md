@@ -39,7 +39,7 @@ The trade is one extra paste. What you get back is a predictable editing surface
 ## Quick Start
 
 ```bash
-git clone <your-fork-url> EathWrit
+git clone https://github.com/hnsol/EathWrit.git
 open EathWrit/EathWrit.xcodeproj
 ```
 
