@@ -3,6 +3,7 @@ import SwiftUI
 struct EditorView: View {
     @StateObject private var editor = EditorController()
     @AppStorage("fontSize") private var fontSize: Double = 24
+    @AppStorage("appearance") private var appearance: Appearance = .system
 
     @State private var toast: String?
     @State private var toastTask: Task<Void, Never>?
@@ -19,6 +20,7 @@ struct EditorView: View {
             .safeAreaInset(edge: .top, spacing: 0) { topBar }
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
             .overlay(alignment: .center) { toastView }
+            .preferredColorScheme(appearance.colorScheme)
     }
 
     // MARK: - 上部バー（親指が届きにくい＝誤タップさせたくないもの）
@@ -37,6 +39,20 @@ struct EditorView: View {
                 .foregroundStyle(.secondary)
 
             Spacer(minLength: 16)
+
+            Menu {
+                Picker("Appearance", selection: $appearance) {
+                    ForEach(Appearance.allCases) { mode in
+                        Label(mode.label, systemImage: mode.symbolName).tag(mode)
+                    }
+                }
+                .pickerStyle(.inline)
+            } label: {
+                Image(systemName: appearance.symbolName)
+            }
+            .accessibilityLabel("Appearance")
+            .buttonStyle(.bordered)
+            .onChange(of: appearance) { _, _ in Haptics.tap() }
 
             Button {
                 clear(copyFirst: false)
