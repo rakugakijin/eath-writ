@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="docs/images/icon.png" width="200" alt="EathWrit のアプリアイコン">
+  <img src="docs/images/icon-light.png" width="160" alt="EathWrit のアプリアイコン（ライト）">
+  <img src="docs/images/icon-dark.png" width="160" alt="EathWrit のアプリアイコン（ダーク）">
 </p>
 
 # EathWrit — 書いて、コピーして、捨てるための iPhone 用スクラッチパッド
@@ -20,9 +21,13 @@ EathWrit は、他のアプリに貼り付けるための文章を書くため�
 
 アプリ名は古英語に由来します。*ēaþe*（＝easy、たやすい）＋ *writ*（＝書かれたもの）で「easy write」という意味です。
 
-| 24pt で編集中 | 同じ本文を 60pt で | 1タップでコピー＆消去 |
+| ライト・24pt | ダーク・24pt | ライト / ダーク / システム |
 |---|---|---|
-| <img src="docs/images/editor.png" width="240" alt="24pt で下書きを編集している画面"> | <img src="docs/images/large-text.png" width="240" alt="同じ本文を 60pt で表示した画面"> | <img src="docs/images/copy-and-clear.png" width="240" alt="コピー＆消去の直後、空になった画面とトースト"> |
+| <img src="docs/images/editor-light.png" width="230" alt="ライト外観で 24pt の下書きを編集している画面"> | <img src="docs/images/editor-dark.png" width="230" alt="同じ下書きをダーク外観で表示した画面"> | <img src="docs/images/appearance-menu.png" width="230" alt="System / Light / Dark を選ぶ外観メニューを開いた画面"> |
+
+| 同じ本文を 60pt で（ライト） | 60pt（ダーク） | 1タップでコピー＆消去 |
+|---|---|---|
+| <img src="docs/images/large-text-light.png" width="230" alt="同じ本文をライト外観の 60pt で表示した画面"> | <img src="docs/images/large-text-dark.png" width="230" alt="同じ本文をダーク外観の 60pt で表示した画面"> | <img src="docs/images/copy-and-clear.png" width="230" alt="コピー＆消去の直後、空になった画面とトースト"> |
 
 ## EathWrit が解決するペイン
 
@@ -71,6 +76,8 @@ Xcode を開いたら、**Signing & Capabilities** で自分の開発チーム�
 - **Undo / Redo に対応** — SwiftUI の `TextEditor` は `UndoManager` を外部に公開しないため、EathWrit は `UITextView` を自前で包んでいます。Undo / Redo ボタンは `NSUndoManager` の通知を監視して自動で有効・無効が切り替わります。
 - **文字サイズは 14pt〜60pt** — 上部バーのステッパーで 4pt 刻みに変更できます。初期値は 24pt で、現在のサイズは隣にポイント数で表示されます。
 - **文字サイズに連動する行間** — 行間はフォントサイズの 35% に設定しているので、60pt にしても 14pt と同じように読みやすさが保たれます。
+- **ライト / ダーク / システムの外観切り替え** — 上部バーのメニューでシステム設定を上書きできます。端末全体はダークのままアプリだけライトで書く、あるいはその逆ができます。選択は `UserDefaults` の `appearance` キーに保存され、`.preferredColorScheme` で適用されるので、`UITextView` や `UIPasteControl` のブリッジ部分にも反映されます。
+- **外観に追従するアプリアイコン** — アイコンはライト・ダーク・ティントの3種類を同梱しているので、ホーム画面のアイコンがシステムの外観に追従します。明るい壁紙の上で黒い四角が浮くことはありません。
 - **親指の届く位置にボタンを配置** — よく使う操作（Undo / Redo / Copy & Clear / Paste / Copy）は下部バーに、誤って押したくない Clear は届きにくい上部バーに置いています。
 - **システム標準のペーストボタン** — Paste には OS 提供の `UIPasteControl` を使い、他のボタンと揃うよう円形にスタイルしています。
 - **キーボードを指で下げられます** — 本文を下にドラッグすると、キーボードが指に追従して下がります。
@@ -89,7 +96,7 @@ Xcode を開いたら、**Signing & Capabilities** で自分の開発チーム�
 | クリア後の Undo | できます | 該当なし | 該当なし | 該当なし | たいてい不可 |
 | 同期 | なし（端末内のみ） | iCloud | iCloud / Bear sync | iCloud | 該当なし |
 | Markdown・書式 | なし | あり | あり | あり | なし |
-| ソースコード | 公開・Swift 4ファイル | 非公開 | 非公開 | 非公開 | 該当なし |
+| ソースコード | 公開・Swift 5ファイル | 非公開 | 非公開 | 非公開 | 該当なし |
 
 **EathWrit を選ぶとき** — 書いている文章の行き先が、いま打っているアプリとは別の場所にあり、その文章をどこにも残したくない場合です。
 
@@ -105,7 +112,7 @@ Xcode を開いたら、**Signing & Capabilities** で自分の開発チーム�
 
 - **メッセージやプロンプトを送る前に下書きしたい iPhone ユーザー** — 全画面の広いバッファで書いてから、チャットアプリや LLM のプロンプト欄、Web フォームに貼り付けられます。
 - **スマートフォンで大きい文字が必要な人** — 60pt の文字と比例した行間により、標準のエディタの文字が小さすぎて推敲しづらい場面でも読み書きできます。
-- **SwiftUI と UIKit の連携例を探している Swift 開発者** — 4ファイル・合計 447 行で、`UIViewRepresentable` による `UITextView` のラップ、Undo スタックの扱い、`UIPasteControl` の組み込みが一通り読めます。
+- **SwiftUI と UIKit の連携例を探している Swift 開発者** — 5ファイル・合計 496 行で、`UIViewRepresentable` による `UITextView` のラップ、Undo スタックの扱い、`UIPasteControl` の組み込みが一通り読めます。
 - **独自の入力欄を持つアプリで長文を書く人** — LINE のように入力ビューを自前で実装しているメッセージアプリは、それぞれ操作感が少しずつ違います。EathWrit で下書きすれば、送り先がどこであっても編集環境は1つに揃います。
 - **使い捨てメモの後片付けが煩わしい人** — あとから削除しなければならないものが原理的に生まれない設計になっています。
 
@@ -114,6 +121,7 @@ Xcode を開いたら、**Signing & Capabilities** で自分の開発チーム�
 | 位置 | ボタン | 役割 | 補足 |
 |---|---|---|---|
 | 上部バー | ステッパー `−` / `+` | 文字サイズ変更 | 14〜60pt、4pt 刻み、初期値 24pt |
+| 上部バー | ◐ Appearance | System / Light / Dark を選ぶ | アイコンが現在の設定を表します。次回起動時も維持されます |
 | 上部バー | 🗑 Clear | コピーせずに本文を消す | 空のときは無効。Undo で戻せます |
 | 下部バー | ↺ Undo | 直前の編集やクリアを取り消す | Undo スタックが空のときは無効 |
 | 下部バー | ↻ Redo | 取り消した編集をやり直す | Redo スタックが空のときは無効 |
@@ -187,6 +195,10 @@ Xcode を開いたら、**Signing & Capabilities** で自分の開発チーム�
 
 ステッパーの範囲は 14pt〜60pt で、4pt 刻み、初期値は 24pt です。行間はフォントサイズの 35% として計算されるので、60pt にしても文字が詰まって読みにくくなることはありません。
 
+### 端末はダークのまま、EathWrit だけライトで使えますか？
+
+使えます。上部バーの外観メニューに System / Light / Dark があり、Light か Dark を選ぶと EathWrit だけがその外観になります。選択は次回起動時も維持されます。System のままにすれば端末の設定に追従します。アプリアイコンもライト・ダーク・ティントの3種類を同梱しているので、アプリ内でどれを選んでいても、ホーム画面のアイコンはシステムの外観に追従します。
+
 ### なぜ Paste ボタンは毎回許可を求めるのですか？
 
 ペースト先を明示的に指定しているためです。`UITextView` は SwiftUI の別サブツリーにあり responder chain を辿れないので、`UIPasteControl` に直接ターゲットを渡しています。その結果、iOS はタップのたびに新しいペースト要求として扱います。これは、ペーストボタンを他の円形ボタンと同じ見た目に揃えるための既知のトレードオフです。SwiftUI の `PasteButton` はサイズも色も指定できません。
@@ -201,7 +213,7 @@ iOS の標準的な保護以上のことはしていません。本文は `UserD
 
 ### ボタン配置を変えたり機能を追加したりできますか？
 
-できます。むしろそれがこのリポジトリの想定された使い方です。アプリ全体で 4ファイル・447 行です。[`EathWritApp.swift`](EathWrit/EathWritApp.swift)（エントリポイント）、[`EditorView.swift`](EathWrit/EditorView.swift)（レイアウト・上下バー・トースト）、[`EditorTextView.swift`](EathWrit/EditorTextView.swift)（`UITextView` のラップと Undo 処理）、[`Clipboard.swift`](EathWrit/Clipboard.swift)（クリップボードと触覚フィードバック）という構成です。ボタンの径・フォントサイズの範囲・刻み幅は `EditorView` の先頭に定数としてまとまっています。
+できます。むしろそれがこのリポジトリの想定された使い方です。アプリ全体で 5ファイル・496 行です。[`EathWritApp.swift`](EathWrit/EathWritApp.swift)（エントリポイント）、[`EditorView.swift`](EathWrit/EditorView.swift)（レイアウト・上下バー・トースト）、[`EditorTextView.swift`](EathWrit/EditorTextView.swift)（`UITextView` のラップと Undo 処理）、[`Appearance.swift`](EathWrit/Appearance.swift)（ライト／ダーク／システムの enum）、[`Clipboard.swift`](EathWrit/Clipboard.swift)（クリップボードと触覚フィードバック）という構成です。ボタンの径・フォントサイズの範囲・刻み幅は `EditorView` の先頭に定数としてまとまっています。
 
 ## 制限事項
 
@@ -216,12 +228,13 @@ iOS の標準的な保護以上のことはしていません。本文は `UserD
 
 ## フォークして自分のツールにしてください
 
-EathWrit はコントリビューションを募集していません。4ファイル・447 行——コーディングエージェントが一度に全部読み切れる分量です。だからこそ、プルリクエストを送るよりも、フォークまたは clone して「自分が欲しい道具」に作り変えてしまうほうが早いはずです。
+EathWrit はコントリビューションを募集していません。5ファイル・496 行——コーディングエージェントが一度に全部読み切れる分量です。だからこそ、プルリクエストを送るよりも、フォークまたは clone して「自分が欲しい道具」に作り変えてしまうほうが早いはずです。
 
 1ファイルの修正で収まる、現実的な改造の例です。
 
 - **ボタンを差し替える** — Copy & Clear を「コピーして貼り付け先アプリを開く」に変える、定型文で囲むボタンを足す、など。ボタンの定義は `EditorView.swift` の上下バーにまとまっています。
 - **フォントを変える** — `EditorTextView.swift` の `UIFont.systemFont(ofSize:)` を等幅や明朝に置き換えるだけです。
+- **セピアや高コントラストのテーマを足す** — `Appearance.swift` は `ColorScheme` に対応する3ケースの enum です。ケースと背景色を1つ足すだけで収まります。
 - **トーストの文言を変える** — `EditorView.swift` の文字列リテラル3つです。
 - **バッファを複数にする** — `EditorController` は `UserDefaults` の `draft` キー1つに保存しています。キーを複数にしてタブを付けるのは小さな変更です。
 - **クリップボードではなく共有シートに出す** — テキストの出口は `Clipboard.copy` の1箇所だけです。
