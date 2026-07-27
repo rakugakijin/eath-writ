@@ -112,7 +112,6 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 ## Who Is This For?
 
 - **iPhone users who draft messages and prompts before sending them** — you compose in a comfortable full-screen buffer, then paste into the chat app, LLM prompt box, or web form.
-- **People with reading-size needs on a phone** — 60pt text with proportional line spacing makes the buffer usable when the system's default editor text is too small to proofread.
 - **Swift developers who want a compact SwiftUI + UIKit interop reference** — 537 lines across 5 files showing `UIViewRepresentable` wrapping of `UITextView`, undo-stack management, and `UIPasteControl` integration.
 - **People who compose in apps with custom input views** — messaging apps that reimplement the text field, such as LINE, each behave a little differently; drafting in EathWrit gives you one consistent editing surface no matter where the text ends up.
 - **Anyone who dislikes cleaning up throwaway notes** — the app is designed so that no artifact is ever created that you have to delete later.
