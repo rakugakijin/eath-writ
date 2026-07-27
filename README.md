@@ -78,7 +78,8 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 - **Line spacing that scales with text size** — Leading is set to 35% of the font size, so a 60pt buffer stays as readable as a 14pt one.
 - **Light, dark, or system appearance** — A menu in the top bar overrides the system setting per app, so you can keep a light writing surface on a phone that is otherwise in dark mode, or the reverse. The choice is stored in `UserDefaults` under `appearance` and applied with `.preferredColorScheme`, which propagates through the `UITextView` and `UIPasteControl` bridges as well.
 - **Matching app icon variants** — The icon ships in light, dark, and tinted artwork, so the Home Screen icon follows the system appearance instead of showing a black tile on a light wallpaper.
-- **Thumb-zone button layout** — Frequent actions (Undo, Redo, Copy & Clear, Paste, Copy) sit in the bottom bar where a thumb reaches; destructive Clear sits in the top bar where it is hard to hit by accident.
+- **A shortcut to Writing Tools** — On iOS 18.2 and later, a wand button in the top bar selects the whole buffer and opens Apple's Writing Tools, so proofreading or rewriting is one tap instead of select-all → long-press → menu. What it does there — proofread, rewrite, summarize — is chosen in Apple's own interface each time. The result comes back through the standard `UITextView` path, so Undo reverses it.
+- **Thumb-zone button layout** — Frequent actions (Undo, Redo, Copy & Clear, Paste, Copy) sit in the bottom bar where a thumb reaches. The top bar is split by what a control can damage: display settings that never touch the text (appearance, text size) on the left, actions that rewrite or destroy it (Writing Tools, Clear) on the right.
 - **System paste button** — Paste uses `UIPasteControl`, the OS-provided control, styled as a circle to match the other buttons.
 - **Interactive keyboard dismissal** — Dragging the text down pulls the keyboard down with your finger.
 - **Smart quotes and dashes disabled** — Typed quotes and hyphens stay as typed, which matters when the text is going into code, a URL, or a prompt.
@@ -112,7 +113,7 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 
 - **iPhone users who draft messages and prompts before sending them** — you compose in a comfortable full-screen buffer, then paste into the chat app, LLM prompt box, or web form.
 - **People with reading-size needs on a phone** — 60pt text with proportional line spacing makes the buffer usable when the system's default editor text is too small to proofread.
-- **Swift developers who want a compact SwiftUI + UIKit interop reference** — 496 lines across 5 files showing `UIViewRepresentable` wrapping of `UITextView`, undo-stack management, and `UIPasteControl` integration.
+- **Swift developers who want a compact SwiftUI + UIKit interop reference** — 535 lines across 5 files showing `UIViewRepresentable` wrapping of `UITextView`, undo-stack management, and `UIPasteControl` integration.
 - **People who compose in apps with custom input views** — messaging apps that reimplement the text field, such as LINE, each behave a little differently; drafting in EathWrit gives you one consistent editing surface no matter where the text ends up.
 - **Anyone who dislikes cleaning up throwaway notes** — the app is designed so that no artifact is ever created that you have to delete later.
 
@@ -121,7 +122,8 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 | Location | Button | Purpose | Notes |
 |---|---|---|---|
 | Top bar | Stepper `−` / `+` | Change text size | 14–60pt, 4pt steps, default 24pt |
-| Top bar | ◐ Appearance | Choose System, Light, or Dark | Icon reflects the current choice; persists across launches |
+| Top bar | ◐ Appearance | Choose System, Light, or Dark | Leftmost; icon reflects the current choice and persists across launches |
+| Top bar | ✨ Writing Tools | Select the whole buffer and open Apple's Writing Tools | iOS 18.2+ only — the button is absent on earlier versions. Disabled when empty; undoable |
 | Top bar | 🗑 Clear | Empty the buffer without copying | Disabled when empty; undoable |
 | Bottom bar | ↺ Undo | Reverse the last edit or clear | Disabled when the undo stack is empty |
 | Bottom bar | ↻ Redo | Reapply the last undone edit | Disabled when the redo stack is empty |
@@ -131,7 +133,7 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 
 ## Requirements
 
-- **iOS 17.0 or later** — the code uses the two-parameter `onChange(of:)` signature and `Task.sleep(for:)`.
+- **iOS 17.0 or later** — the code uses the two-parameter `onChange(of:)` signature and `Task.sleep(for:)`. On iOS 18.2 and later one extra button appears in the top bar, the Writing Tools shortcut; everything else is identical.
 - **iPhone** — `TARGETED_DEVICE_FAMILY` is set to iPhone only, and the app is locked to portrait orientation.
 - **Xcode with a signing identity** — the project is configured with a development team and bundle identifier `com.masatora.eathwrit`; change both to your own before building.
 - **No third-party dependencies** — the app imports only SwiftUI, UIKit, and Foundation. There is no package manifest, no CocoaPods, and no Carthage.
@@ -195,6 +197,10 @@ No. The Xcode target is set to iPhone only and locked to portrait orientation. I
 
 The stepper ranges from 14pt to 60pt in 4pt steps, with 24pt as the default. Line spacing is computed as 35% of the font size, so the 60pt setting stays readable rather than becoming a wall of tightly packed large text.
 
+### Does EathWrit have AI features?
+
+Not of its own. On iOS 18.2 and later there is a wand button that selects the whole buffer and opens Apple's Writing Tools — the same panel you would reach by selecting all the text and digging through the edit menu. EathWrit only saves those steps; it does not send anything anywhere, has no prompt of its own, and never rewrites the text on its own initiative. Whatever Writing Tools returns lands on the normal undo stack, so Undo puts your original wording back.
+
 ### Can I use EathWrit in light mode while my phone is in dark mode?
 
 Yes. The top bar has an appearance menu with System, Light, and Dark. Choosing Light or Dark overrides the system setting for EathWrit only, and the choice persists across launches. Leaving it on System follows the phone. The app icon also ships in light, dark, and tinted variants, so the Home Screen icon follows the system appearance regardless of what you pick inside the app.
@@ -213,7 +219,7 @@ The buttons are icon-only and have English accessibility labels (Undo, Redo, Cop
 
 ### Can I change the button layout or add features?
 
-Yes, and that is the intended way to use this repository. The whole app is 496 lines across 5 Swift files: [`EathWritApp.swift`](EathWrit/EathWritApp.swift) (entry point), [`EditorView.swift`](EathWrit/EditorView.swift) (layout, bars, toast), [`EditorTextView.swift`](EathWrit/EditorTextView.swift) (the `UITextView` wrapper and undo handling), [`Appearance.swift`](EathWrit/Appearance.swift) (the light/dark/system enum), and [`Clipboard.swift`](EathWrit/Clipboard.swift) (clipboard and haptics). Button sizes, the font range, and the step size are constants at the top of `EditorView`.
+Yes, and that is the intended way to use this repository. The whole app is 535 lines across 5 Swift files: [`EathWritApp.swift`](EathWrit/EathWritApp.swift) (entry point), [`EditorView.swift`](EathWrit/EditorView.swift) (layout, bars, toast), [`EditorTextView.swift`](EathWrit/EditorTextView.swift) (the `UITextView` wrapper and undo handling), [`Appearance.swift`](EathWrit/Appearance.swift) (the light/dark/system enum), and [`Clipboard.swift`](EathWrit/Clipboard.swift) (clipboard and haptics). Button sizes, the font range, and the step size are constants at the top of `EditorView`.
 
 ## Limitations
 
@@ -223,12 +229,13 @@ Yes, and that is the intended way to use this repository. The whole app is 496 l
 - **No iPad, Mac, or landscape support** — iPhone portrait only.
 - **Not on the App Store** — you must build and sign it yourself in Xcode.
 - **No plain-text export** — text leaves the app through the clipboard, not through a share sheet or file.
+- **Writing Tools needs iOS 18.2 or later** — on iOS 17.0 through 18.1 the wand button simply does not appear. Behavior on devices without Apple Intelligence has not been verified.
 - **No automated tests** — the project contains no test target.
 - **Undo history is not persisted** — the buffer survives relaunch, but the undo stack does not.
 
 ## Fork It and Make Your Own
 
-EathWrit is not looking for contributors. It is 496 lines in 5 files — small enough that a coding agent can read all of it in one pass — so the better move is to fork or clone it and shape it into the tool *you* want.
+EathWrit is not looking for contributors. It is 535 lines in 5 files — small enough that a coding agent can read all of it in one pass — so the better move is to fork or clone it and shape it into the tool *you* want.
 
 Reasonable one-session modifications, each contained in a single file:
 
