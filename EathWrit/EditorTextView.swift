@@ -61,6 +61,21 @@ final class EditorController: ObservableObject {
         replaceAll(with: "")
     }
 
+    /// 全文を選択して作文ツールを開く。
+    ///
+    /// 選択メニューから辿るのと同じ状態を作るだけで、何をさせるかは Apple の UI 側で選ぶ。
+    /// このアプリが存在する理由は iPhone 上の選択操作が苦痛だからなので、
+    /// 既存の選択は見ずに常に全文を対象にする。
+    @available(iOS 18.2, *)
+    func showWritingTools() {
+        guard let textView else { return }
+        // 標準の編集アクションなので first responder であることが前提。
+        textView.becomeFirstResponder()
+        // String.count は書記素クラスタ単位で NSRange と食い違う。
+        textView.selectedRange = NSRange(location: 0, length: (textView.text as NSString).length)
+        textView.showWritingTools(textView)
+    }
+
     func undo() {
         textView?.undoManager?.undo()
         syncFromTextView()

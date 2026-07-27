@@ -7,7 +7,6 @@ struct EditorView: View {
 
     @State private var toast: String?
     @State private var toastTask: Task<Void, Never>?
-    @State private var isPolishing = false
 
     private let fontSizeRange: ClosedRange<Double> = 14...60
     private let fontStep: Double = 4
@@ -22,33 +21,15 @@ struct EditorView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
             .overlay(alignment: .center) { toastView }
             .preferredColorScheme(appearance.colorScheme)
-            .sheet(isPresented: $isPolishing) {
-                PolishSheet(original: editor.text) { polished in
-                    // replaceAll は UITextInput 経由なので、この置換も Undo で戻せる。
-                    editor.replaceAll(with: polished)
-                    Haptics.success()
-                    show("整形しました（Undoで戻せます）")
-                }
-            }
     }
 
     // MARK: - 上部バー（親指が届きにくい＝誤タップさせたくないもの）
+    //
+    // 左は表示設定（本文を変えない）、右は編集操作（本文を変える）。
+    // 本文を壊しうる2つを片側に寄せておくと、設定をいじるつもりで誤爆しにくい。
 
     private var topBar: some View {
         HStack(spacing: 12) {
-            // 区切り線・長押しリピート・上下限のグレーアウトが標準で付く。
-            Stepper(value: $fontSize, in: fontSizeRange, step: fontStep) {
-                EmptyView()
-            }
-            .labelsHidden()
-            .onChange(of: fontSize) { _, _ in Haptics.tap() }
-
-            Text("\(Int(fontSize))pt")
-                .font(.footnote.monospacedDigit())
-                .foregroundStyle(.secondary)
-
-            Spacer(minLength: 16)
-
             Menu {
                 Picker("Appearance", selection: $appearance) {
                     ForEach(Appearance.allCases) { mode in
@@ -63,15 +44,29 @@ struct EditorView: View {
             .buttonStyle(.bordered)
             .onChange(of: appearance) { _, _ in Haptics.tap() }
 
-            // 全文を書き換える操作なので、頻繁に押す下部バーではなくこちらに置く。
-            if Polisher.isAvailable {
+            // 区切り線・長押しリピート・上下限のグレーアウトが標準で付く。
+            Stepper(value: $fontSize, in: fontSizeRange, step: fontStep) {
+                EmptyView()
+            }
+            .labelsHidden()
+            .onChange(of: fontSize) { _, _ in Haptics.tap() }
+
+            Text("\(Int(fontSize))pt")
+                .font(.footnote.monospacedDigit())
+                .foregroundStyle(.secondary)
+
+            Spacer(minLength: 16)
+
+            // 選択メニューから作文ツールに辿り着くまでの手数を省くだけのボタン。
+            // 何をさせるかは Apple の UI 側で毎回選ぶ。
+            if #available(iOS 18.2, *) {
                 Button {
                     Haptics.tap()
-                    isPolishing = true
+                    editor.showWritingTools()
                 } label: {
                     Image(systemName: "wand.and.sparkles")
                 }
-                .accessibilityLabel("Polish")
+                .accessibilityLabel("Writing Tools")
                 .buttonStyle(.bordered)
                 .disabled(editor.text.isEmpty)
             }
