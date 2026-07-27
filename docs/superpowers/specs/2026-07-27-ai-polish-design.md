@@ -135,6 +135,10 @@ EathWrit の動線は「書く → Copy & Clear → 他アプリへ貼る」で�
 
 このアプリが存在する理由は iPhone 上の選択操作が苦痛だからで、肩代わりする価値があるのはそこだけだった。
 
-### 未検証
+### シミュレータでは動かない
 
-シミュレータでは `canPerformAction(showWritingTools:)` が false を返し、パネルが開かない（first responder であること・全文選択されていること・`writingToolsBehavior` を `.complete` にすることはいずれも確認済みで、それでも false）。環境側の制約と思われるが確定していない。**実機 iPhone 15 Pro での確認が必要。**
+実機 iPhone 15 Pro ではボタンを押すと作文ツールが開く。**動作は確認済み。**
+
+一方シミュレータでは `canPerformAction(showWritingTools:)` が false を返し、パネルが開かない。first responder であること・全文が選択されていること・`writingToolsBehavior` を `.complete` にすることはいずれも確認済みで、それでも false になる。同じシミュレータで FoundationModels は動いていたので Apple Intelligence が丸ごと無効なわけではなく、作文ツールの UI だけが提供されていない。
+
+**この機能をシミュレータで検証しようとしないこと。** 実機でしか確かめられない。
