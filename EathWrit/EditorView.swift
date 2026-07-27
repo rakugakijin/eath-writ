@@ -10,6 +10,10 @@ struct EditorView: View {
 
     private let fontSizeRange: ClosedRange<Double> = 14...60
     private let fontStep: Double = 4
+    /// 上部バーのアイコンの箱。`.bordered` は字面でピルの大きさが変わるため、
+    /// ラベル側をこの寸法に固定して隣のステッパーと高さを揃える
+    /// （下部バーで径を固定しているのと同じ理由）。
+    private let topBarIconSize = CGSize(width: 20, height: 22.5)
     /// 下部バーの通常ボタンの径。
     private let actionButtonSize: CGFloat = 52
     /// 主操作（Copy & Clear）だけこの径にして中央に置く。
@@ -39,6 +43,7 @@ struct EditorView: View {
                 .pickerStyle(.inline)
             } label: {
                 Image(systemName: appearance.symbolName)
+                    .frame(width: topBarIconSize.width, height: topBarIconSize.height)
             }
             .accessibilityLabel("Appearance")
             .buttonStyle(.bordered)
@@ -65,6 +70,7 @@ struct EditorView: View {
                     editor.showWritingTools()
                 } label: {
                     Image(systemName: "wand.and.sparkles")
+                        .frame(width: topBarIconSize.width, height: topBarIconSize.height)
                 }
                 .accessibilityLabel("Writing Tools")
                 .buttonStyle(.bordered)
@@ -75,6 +81,7 @@ struct EditorView: View {
                 clear(copyFirst: false)
             } label: {
                 Image(systemName: "trash")
+                    .frame(width: topBarIconSize.width, height: topBarIconSize.height)
             }
             .accessibilityLabel("Clear")
             .buttonStyle(.bordered)
