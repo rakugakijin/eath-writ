@@ -7,6 +7,7 @@ struct EditorView: View {
 
     @State private var toast: String?
     @State private var toastTask: Task<Void, Never>?
+    @State private var isPolishing = false
 
     private let fontSizeRange: ClosedRange<Double> = 14...60
     private let fontStep: Double = 4
@@ -21,6 +22,14 @@ struct EditorView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) { bottomBar }
             .overlay(alignment: .center) { toastView }
             .preferredColorScheme(appearance.colorScheme)
+            .sheet(isPresented: $isPolishing) {
+                PolishSheet(original: editor.text) { polished in
+                    // replaceAll は UITextInput 経由なので、この置換も Undo で戻せる。
+                    editor.replaceAll(with: polished)
+                    Haptics.success()
+                    show("整形しました（Undoで戻せます）")
+                }
+            }
     }
 
     // MARK: - 上部バー（親指が届きにくい＝誤タップさせたくないもの）
@@ -53,6 +62,19 @@ struct EditorView: View {
             .accessibilityLabel("Appearance")
             .buttonStyle(.bordered)
             .onChange(of: appearance) { _, _ in Haptics.tap() }
+
+            // 全文を書き換える操作なので、頻繁に押す下部バーではなくこちらに置く。
+            if Polisher.isAvailable {
+                Button {
+                    Haptics.tap()
+                    isPolishing = true
+                } label: {
+                    Image(systemName: "wand.and.sparkles")
+                }
+                .accessibilityLabel("Polish")
+                .buttonStyle(.bordered)
+                .disabled(editor.text.isEmpty)
+            }
 
             Button {
                 clear(copyFirst: false)
