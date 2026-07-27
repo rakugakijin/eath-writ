@@ -8,7 +8,9 @@ struct EditorView: View {
     @State private var toast: String?
     @State private var toastTask: Task<Void, Never>?
 
-    private let fontSizeRange: ClosedRange<Double> = 14...60
+    /// 上下限の差は刻みの倍数にしておく。そうでないと端でクランプが起きた瞬間に
+    /// 刻みの基点がずれ、初期値の 24pt へ二度と戻れなくなる。
+    private let fontSizeRange: ClosedRange<Double> = 16...60
     private let fontStep: Double = 4
     /// 上部バーのアイコンの箱。`.bordered` は字面でピルの大きさが変わるため、
     /// ラベル側をこの寸法に固定して隣のステッパーと高さを揃える

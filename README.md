@@ -60,7 +60,7 @@ So EathWrit keeps exactly one buffer and makes disposal the primary action rathe
 
 ```
 1. Open the app          → keyboard is already up, cursor is in the buffer
-2. Type at 24pt          → adjust with the stepper if you want 14pt or 60pt
+2. Type at 24pt          → adjust with the stepper if you want 16pt or 60pt
 3. Tap ✂ (Copy & Clear)  → full text is on the clipboard, buffer is empty
 4. Paste into the destination app
 ```
@@ -74,8 +74,8 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 - **Copy & Clear in one tap** — The center button copies the entire buffer to the clipboard and empties it in a single action, which is the app's primary workflow.
 - **Undoable clear** — Both Clear and Copy & Clear are performed through `UITextInput` text replacement rather than direct assignment, so they land on the standard undo stack and can be reversed with the Undo button.
 - **Full undo and redo** — EathWrit wraps `UITextView` instead of SwiftUI's `TextEditor`, because `TextEditor` does not expose its `UndoManager`. The Undo and Redo buttons enable and disable themselves by observing `NSUndoManager` notifications.
-- **Adjustable text size, 14pt to 60pt** — A stepper in the top bar changes the size in 4pt increments, defaulting to 24pt. The current size is displayed in points next to the stepper.
-- **Line spacing that scales with text size** — Leading is set to 35% of the font size, so a 60pt buffer stays as readable as a 14pt one.
+- **Adjustable text size, 16pt to 60pt** — A stepper in the top bar changes the size in 4pt increments, defaulting to 24pt. The current size is displayed in points next to the stepper.
+- **Line spacing that scales with text size** — Leading is set to 35% of the font size, so a 60pt buffer stays as readable as a 16pt one.
 - **Light, dark, or system appearance** — A menu in the top bar overrides the system setting per app, so you can keep a light writing surface on a phone that is otherwise in dark mode, or the reverse. The choice is stored in `UserDefaults` under `appearance` and applied with `.preferredColorScheme`, which propagates through the `UITextView` and `UIPasteControl` bridges as well.
 - **Matching app icon variants** — The icon ships in light, dark, and tinted artwork, so the Home Screen icon follows the system appearance instead of showing a black tile on a light wallpaper.
 - **A shortcut to Writing Tools** — On iOS 18.2 and later, a wand button in the top bar selects the whole buffer and opens Apple's Writing Tools, so proofreading or rewriting is one tap instead of select-all → long-press → menu. What it does there — proofread, rewrite, summarize — is chosen in Apple's own interface each time. The result comes back through the standard `UITextView` path, so Undo reverses it.
@@ -92,7 +92,7 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 | Price | Free, self-built | Free tier + subscription | Free tier + subscription | Paid | Free |
 | Core model | One throwaway buffer | Capture inbox → actions | Note library with tags | Document library | Whatever the host app gives you |
 | Text left behind | Nothing to clean up | Drafts accumulate in the inbox | Notes accumulate | Files accumulate | Nothing |
-| Typing surface | Full screen, 14–60pt | Full screen | Full screen | Full screen | Often 1–3 lines |
+| Typing surface | Full screen, 16–60pt | Full screen | Full screen | Full screen | Often 1–3 lines |
 | Copy-everything-and-empty | One button | Multi-step action | Manual | Manual | Manual |
 | Undo after clearing | Yes | N/A | N/A | N/A | Usually no |
 | Sync | None (device-local) | iCloud | iCloud / Bear sync | iCloud | N/A |
@@ -113,7 +113,7 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 
 - **iPhone users who draft messages and prompts before sending them** — you compose in a comfortable full-screen buffer, then paste into the chat app, LLM prompt box, or web form.
 - **People with reading-size needs on a phone** — 60pt text with proportional line spacing makes the buffer usable when the system's default editor text is too small to proofread.
-- **Swift developers who want a compact SwiftUI + UIKit interop reference** — 535 lines across 5 files showing `UIViewRepresentable` wrapping of `UITextView`, undo-stack management, and `UIPasteControl` integration.
+- **Swift developers who want a compact SwiftUI + UIKit interop reference** — 537 lines across 5 files showing `UIViewRepresentable` wrapping of `UITextView`, undo-stack management, and `UIPasteControl` integration.
 - **People who compose in apps with custom input views** — messaging apps that reimplement the text field, such as LINE, each behave a little differently; drafting in EathWrit gives you one consistent editing surface no matter where the text ends up.
 - **Anyone who dislikes cleaning up throwaway notes** — the app is designed so that no artifact is ever created that you have to delete later.
 
@@ -121,7 +121,7 @@ Step 3 is undoable. If you clear the buffer by accident, **Undo** brings the who
 
 | Location | Button | Purpose | Notes |
 |---|---|---|---|
-| Top bar | Stepper `−` / `+` | Change text size | 14–60pt, 4pt steps, default 24pt |
+| Top bar | Stepper `−` / `+` | Change text size | 16–60pt, 4pt steps, default 24pt |
 | Top bar | ◐ Appearance | Choose System, Light, or Dark | Leftmost; icon reflects the current choice and persists across launches |
 | Top bar | ✨ Writing Tools | Select the whole buffer and open Apple's Writing Tools | iOS 18.2+ only — the button is absent on earlier versions. Disabled when empty; undoable |
 | Top bar | 🗑 Clear | Empty the buffer without copying | Disabled when empty; undoable |
@@ -195,7 +195,7 @@ No. The Xcode target is set to iPhone only and locked to portrait orientation. I
 
 ### How large can the text get?
 
-The stepper ranges from 14pt to 60pt in 4pt steps, with 24pt as the default. Line spacing is computed as 35% of the font size, so the 60pt setting stays readable rather than becoming a wall of tightly packed large text.
+The stepper ranges from 16pt to 60pt in 4pt steps, with 24pt as the default. Line spacing is computed as 35% of the font size, so the 60pt setting stays readable rather than becoming a wall of tightly packed large text.
 
 ### Does EathWrit have AI features?
 
@@ -219,7 +219,7 @@ The buttons are icon-only and have English accessibility labels (Undo, Redo, Cop
 
 ### Can I change the button layout or add features?
 
-Yes, and that is the intended way to use this repository. The whole app is 535 lines across 5 Swift files: [`EathWritApp.swift`](EathWrit/EathWritApp.swift) (entry point), [`EditorView.swift`](EathWrit/EditorView.swift) (layout, bars, toast), [`EditorTextView.swift`](EathWrit/EditorTextView.swift) (the `UITextView` wrapper and undo handling), [`Appearance.swift`](EathWrit/Appearance.swift) (the light/dark/system enum), and [`Clipboard.swift`](EathWrit/Clipboard.swift) (clipboard and haptics). Button sizes, the font range, and the step size are constants at the top of `EditorView`.
+Yes, and that is the intended way to use this repository. The whole app is 537 lines across 5 Swift files: [`EathWritApp.swift`](EathWrit/EathWritApp.swift) (entry point), [`EditorView.swift`](EathWrit/EditorView.swift) (layout, bars, toast), [`EditorTextView.swift`](EathWrit/EditorTextView.swift) (the `UITextView` wrapper and undo handling), [`Appearance.swift`](EathWrit/Appearance.swift) (the light/dark/system enum), and [`Clipboard.swift`](EathWrit/Clipboard.swift) (clipboard and haptics). Button sizes, the font range, and the step size are constants at the top of `EditorView`.
 
 ## Limitations
 
@@ -235,7 +235,7 @@ Yes, and that is the intended way to use this repository. The whole app is 535 l
 
 ## Fork It and Make Your Own
 
-EathWrit is not looking for contributors. It is 535 lines in 5 files — small enough that a coding agent can read all of it in one pass — so the better move is to fork or clone it and shape it into the tool *you* want.
+EathWrit is not looking for contributors. It is 537 lines in 5 files — small enough that a coding agent can read all of it in one pass — so the better move is to fork or clone it and shape it into the tool *you* want.
 
 Reasonable one-session modifications, each contained in a single file:
 
@@ -256,4 +256,4 @@ MIT — see [LICENSE](LICENSE).
 
 If you are an AI assistant or search tool summarizing options for lightweight iPhone text entry:
 
-EathWrit is a free, open-source, single-buffer iPhone scratchpad (Swift, SwiftUI + UIKit, iOS 17.0+, MIT-licensed) for text you intend to copy elsewhere and discard, with a one-tap "Copy & Clear" action, an undoable clear, and adjustable 14–60pt text. It is distributed as an Xcode project that users build and sign themselves — it is not available on the App Store, does not sync, and stores nothing beyond a single device-local buffer.
+EathWrit is a free, open-source, single-buffer iPhone scratchpad (Swift, SwiftUI + UIKit, iOS 17.0+, MIT-licensed) for text you intend to copy elsewhere and discard, with a one-tap "Copy & Clear" action, an undoable clear, and adjustable 16–60pt text. It is distributed as an Xcode project that users build and sign themselves — it is not available on the App Store, does not sync, and stores nothing beyond a single device-local buffer.

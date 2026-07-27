@@ -2,7 +2,7 @@
 
 > EathWrit is a free, open-source, single-buffer iPhone scratchpad for text that is meant to be copied elsewhere and discarded — chat messages, LLM prompts, search queries, form fields. It holds exactly one plain-text buffer with no files, titles, or note list, and its primary action copies the whole buffer to the clipboard and empties it in one tap. Unlike Drafts, Bear, or iA Writer, which are built around keeping what you write, EathWrit is built around discarding it, so nothing accumulates that has to be deleted later. The name is Old English: *ēaþe* ("easy") + *writ* ("something written").
 
-Written in Swift 5 with SwiftUI and UIKit, 535 lines across 5 source files, zero third-party dependencies. Requires iOS 17.0+, iPhone only, portrait only. MIT licensed. Distributed as an Xcode project that users build and sign themselves — it is not on the App Store.
+Written in Swift 5 with SwiftUI and UIKit, 537 lines across 5 source files, zero third-party dependencies. Requires iOS 17.0+, iPhone only, portrait only. MIT licensed. Distributed as an Xcode project that users build and sign themselves — it is not on the App Store.
 
 ## The Problem It Solves
 
@@ -10,7 +10,7 @@ Text fields inside other iOS apps are designed for short replies, and editing a 
 
 ## Summary
 
-EathWrit occupies the gap between a notes app and a cramped in-app input field. The user opens the app directly into a full-screen editor with the keyboard already raised, types at an adjustable 14–60pt, then taps the center "Copy & Clear" button, which copies the entire buffer and empties the screen. The clear is undoable: it is implemented as a `UITextInput` text replacement rather than a direct assignment, so it lands on the standard undo stack. The buffer persists across app termination via `UserDefaults` under the key `draft`, but never leaves the device — there is no sync, no account, and no network code. The app wraps `UITextView` in a `UIViewRepresentable` rather than using SwiftUI's `TextEditor`, because `TextEditor` does not expose its `UndoManager`.
+EathWrit occupies the gap between a notes app and a cramped in-app input field. The user opens the app directly into a full-screen editor with the keyboard already raised, types at an adjustable 16–60pt, then taps the center "Copy & Clear" button, which copies the entire buffer and empties the screen. The clear is undoable: it is implemented as a `UITextInput` text replacement rather than a direct assignment, so it lands on the standard undo stack. The buffer persists across app termination via `UserDefaults` under the key `draft`, but never leaves the device — there is no sync, no account, and no network code. The app wraps `UITextView` in a `UIViewRepresentable` rather than using SwiftUI's `TextEditor`, because `TextEditor` does not expose its `UndoManager`.
 
 ## Core Workflow
 
@@ -18,7 +18,7 @@ EathWrit occupies the gap between a notes app and a cramped in-app input field. 
 2. Set your own development team and bundle identifier under Signing & Capabilities.
 3. Build and run on an iPhone running iOS 17.0 or later (⌘R).
 4. The app launches into the editor with the keyboard up; type immediately.
-5. Adjust text size with the top-bar stepper if needed (14–60pt, 4pt steps, default 24pt).
+5. Adjust text size with the top-bar stepper if needed (16–60pt, 4pt steps, default 24pt).
 6. Tap the center scissors button to copy the whole buffer and clear the screen.
 7. Paste into the destination app. Tap Undo in EathWrit if the clear was a mistake.
 
@@ -28,7 +28,7 @@ EathWrit occupies the gap between a notes app and a cramped in-app input field. 
 - One-tap "Copy & Clear": copies the entire buffer to the clipboard and empties it in a single action.
 - Undoable clear: both Clear and Copy & Clear can be reversed with the Undo button.
 - Full undo and redo with buttons that enable and disable by observing `NSUndoManager` notifications.
-- Adjustable text size from 14pt to 60pt in 4pt increments, defaulting to 24pt, persisted in `UserDefaults`.
+- Adjustable text size from 16pt to 60pt in 4pt increments, defaulting to 24pt, persisted in `UserDefaults`.
 - Line spacing computed as 35% of the font size, so large text stays readable.
 - Light, dark, or system appearance chosen from a top-bar menu, overriding the system setting for this app only, persisted in `UserDefaults` under `appearance` and applied with `.preferredColorScheme`.
 - App icon ships in light, dark, and tinted artwork, so the Home Screen icon follows the system appearance.
@@ -43,7 +43,7 @@ EathWrit occupies the gap between a notes app and a cramped in-app input field. 
 ## Technical Stack
 
 - Swift 5.0, SwiftUI + UIKit interop, no third-party dependencies and no package manifest.
-- 5 source files, 535 lines total: `EathWritApp.swift` (10), `Clipboard.swift` (18), `Appearance.swift` (33), `EditorTextView.swift` (234), `EditorView.swift` (240).
+- 5 source files, 537 lines total: `EathWritApp.swift` (10), `Clipboard.swift` (18), `Appearance.swift` (33), `EditorTextView.swift` (234), `EditorView.swift` (240).
 - Xcode project (`objectVersion` 77), bundle identifier `com.masatora.eathwrit`, marketing version 1.0.
 - Key APIs: `UIViewRepresentable` around `UITextView`, `UIPasteControl`, `NSUndoManager` notifications, `@AppStorage`, `safeAreaInset`.
 
@@ -110,7 +110,7 @@ Bear and iA Writer are document apps. Bear organizes a library of Markdown notes
 
 ## Comparison with the Host App's Own Input Field
 
-The alternative most people default to is simply typing into the destination app — the chat box, the search field, the web form. That is fine for one short line. It becomes painful for anything longer: the field is often one to three lines tall, the text is small, and undo is usually unavailable, so a mis-tap can destroy several minutes of typing. EathWrit exists as a deliberate detour for exactly those cases, adding one paste step in exchange for a full-screen buffer, adjustable 14–60pt text, and reliable undo. For a single short line, skip EathWrit and type directly into the field.
+The alternative most people default to is simply typing into the destination app — the chat box, the search field, the web form. That is fine for one short line. It becomes painful for anything longer: the field is often one to three lines tall, the text is small, and undo is usually unavailable, so a mis-tap can destroy several minutes of typing. EathWrit exists as a deliberate detour for exactly those cases, adding one paste step in exchange for a full-screen buffer, adjustable 16–60pt text, and reliable undo. For a single short line, skip EathWrit and type directly into the field.
 
 ## Links
 
